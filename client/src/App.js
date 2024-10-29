@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import Navbar from './components/Navbar';
+import TeacherList from './components/TeacherList';
+import TeacherProfile from './components/TeacherProfile';
+import Login from './pages/Login';
+
+import './styles/styles.css';
+
+const AppContent = () => {
+  const { darkMode } = useTheme();
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+
+  return (
+    <div className={`app ${darkMode ? 'dark-mode' : ''}`}>
+      <Router>
+        <Navbar />
+        <div className="container mt-5">
+          <Routes>
+            <Route path="/" element={<TeacherList />} />
+            <Route path="/profesor/:id" element={<TeacherProfile />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+      </Router>
+    </div>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 
